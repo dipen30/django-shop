@@ -15,8 +15,10 @@ class Migration(migrations.Migration):
         dependencies.append(('email_auth', '0001_initial'))
         customer_bases = ('email_auth.user',)
     else:
-        dependencies.append(('auth', '0001_initial'))
-        customer_bases = ('auth.user',)
+        dependencies = [
+            migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ]
+        customer_bases = (settings.AUTH_USER_MODEL,)
 
     operations = [
         migrations.CreateModel(

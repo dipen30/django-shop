@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.utils.functional import SimpleLazyObject
 from django.utils import timezone
 from shop.models.customer import CustomerModel
+from django.utils.deprecation import MiddlewareMixin
 
 
 def get_customer(request, force=False):
@@ -12,7 +13,7 @@ def get_customer(request, force=False):
     return request._cached_customer
 
 
-class CustomerMiddleware(object):
+class CustomerMiddleware(MiddlewareMixin):
     """
     Similar to Django's AuthenticationMiddleware, which adds the user object to the request,
     this middleware adds the customer object to the request.
@@ -38,7 +39,7 @@ class CustomerMiddleware(object):
         return response
 
 
-class MethodOverrideMiddleware(object):
+class MethodOverrideMiddleware(MiddlewareMixin):
     """
     This middleware is required to emulate methods PUT and DELETE using a HTTP method POST
     as wrapper. Some misconfigured proxies do not pass these methods properly, hence this
