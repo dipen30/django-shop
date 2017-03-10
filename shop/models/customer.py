@@ -153,7 +153,11 @@ class CustomerManager(models.Manager):
         """
         username = self.encode_session_key(session_key)
         try:
-            user = get_user_model().objects.get(username=username)
+            user_model = get_user_model()
+            if hasattr(user_model, 'username'):
+                user = get_user_model().objects.get(username=username)
+            else:
+                user = get_user_model().objects.get(email=username)
         except get_user_model().DoesNotExist:
             user = AnonymousUser()
         return user
@@ -192,7 +196,11 @@ class CustomerManager(models.Manager):
             # create or get a previously created inactive intermediate user,
             # which later can declare himself as guest, or register as a valid Django user
             try:
-                user = get_user_model().objects.get(username=username)
+                user_model = get_user_model()
+                if hasattr(user_model, 'username'):
+                    user = get_user_model().objects.get(username=username)
+                else:
+                    user = get_user_model().objects.get(email=username)
             except get_user_model().DoesNotExist:
                 user = get_user_model().objects.create_user(username)
                 user.is_active = False
