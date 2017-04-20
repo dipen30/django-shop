@@ -229,7 +229,7 @@ class BaseItemSerializer(ItemModelSerializer):
 class CartItemSerializer(BaseItemSerializer):
     class Meta(BaseItemSerializer.Meta):
         list_serializer_class = CartListSerializer
-        exclude = ('cart', 'id',)
+        exclude = ('cart', )
 
     def create(self, validated_data):
         validated_data['cart'] = CartModel.objects.get_or_create_from_request(self.context['request'])
