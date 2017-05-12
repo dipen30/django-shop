@@ -209,7 +209,7 @@ class BaseItemSerializer(ItemModelSerializer):
     url = serializers.HyperlinkedIdentityField(lookup_field='pk', view_name='shop:cart-detail')
     price = MoneyField(source='unit_price')
     item_total_price = MoneyField(source='line_total')
-    product = serializers.SerializerMethodField(
+    summary = serializers.SerializerMethodField(
         help_text="Sub-serializer for fields to be shown in the product's summary.")
     extra_rows = ExtraCartRowList(read_only=True)
 
@@ -219,7 +219,7 @@ class BaseItemSerializer(ItemModelSerializer):
             raise serializers.ValidationError(msg.format(product))
         return product
 
-    def get_product(self, cart_item):
+    def get_summary(self, cart_item):
         serializer_class = get_product_summary_serializer_class()
         serializer = serializer_class(cart_item.product, context=self.context,
                                       read_only=True, label=self.root.label)
